@@ -214,6 +214,18 @@ sharp_init_image_from_file(VipsImage **image, char const *file, VipsAccess const
   return imageType;
 }
 
+/*
+  Returns the window size for the named interpolator. For example,
+  a window size of 3 means a 3x3 pixel grid is used for the calculation.
+*/
+static int
+sharp_interpolator_window_size(char const *name) {
+  VipsInterpolate *interpolator = vips_interpolate_new(name);
+  int window_size = vips_interpolate_get_window_size(interpolator);
+  g_object_unref(interpolator);
+  return window_size;
+}
+
 // Metadata
 
 struct metadata_baton {
@@ -392,6 +404,9 @@ class ResizeWorker : public NanAsyncWorker {
       inputHeight = swap;
     }
 
+    // Get window size of interpolator, used for determining shrink vs affine
+    int window_size = sharp_interpolator_window_size(baton->interpolator.c_str());
+
     // Scaling calculations
     double factor;
     if (baton->width > 0 && baton->height > 0) {
@@ -421,10 +436,20 @@ class ResizeWorker : public NanAsyncWorker {
       baton->width = inputWidth;
       baton->height = inputHeight;
     }
-    int shrink = floor(factor);
+
+    // Calculate integral box shrink
+    int shrink;
+    if (window_size > 2) {
+      // Shrink less, affine more with interpolators that use at least 3x3 pixel window
+      shrink = floor(factor * 2.0 / window_size);
+    } else {
+      shrink = floor(factor);
+    }
     if (shrink < 1) {
       shrink = 1;
     }
+
+    // Calculate residual float affine transformation
     double residual = static_cast<double>(shrink) / factor;
 
     // Do not enlarge the output if the input width *or* height are already less than the required dimensions
@@ -440,7 +465,7 @@ class ResizeWorker : public NanAsyncWorker {
 
     // Try to use libjpeg shrink-on-load, but not when applying gamma correction
     int shrink_on_load = 1;
-    if (inputImageType == JPEG && baton->gamma == 0) {
+    if (inputImageType == JPEG && baton->gamma == 0 && shrink > 1) {
       if (shrink >= 8) {
         factor = factor / 8;
         shrink_on_load = 8;
@@ -456,7 +481,11 @@ class ResizeWorker : public NanAsyncWorker {
     if (shrink_on_load > 1) {
       // Recalculate integral shrink and double residual
       factor = std::max(factor, 1.0);
-      shrink = floor(factor);
+      if (window_size > 2) {
+        shrink = floor(factor * 2.0 / window_size);
+      } else {
+        shrink = floor(factor);
+      }
       residual = static_cast<double>(shrink) / factor;
       // Reload input using shrink-on-load
       if (baton->buffer_in_len > 1) {

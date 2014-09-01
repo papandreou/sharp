@@ -277,69 +277,69 @@ async.series([
   },
   // Interpolation: nearest neighbour
   function(done) {
-    sharp(inputJpg).resize(320, 240).interpolateWith(sharp.interpolator.nearest).toBuffer(function(err, data, info) {
-      if (err) throw err;
-      assert.strictEqual(true, data.length > 0);
-      assert.strictEqual('jpeg', info.format);
-      assert.strictEqual(320, info.width);
-      assert.strictEqual(240, info.height);
-      done();
-    });
+    sharp(inputJpg).resize(640)
+      .interpolateWith(sharp.interpolator.nearest)
+      .toFile(path.join(fixturesPath, 'output.interpolator-nearest.jpg'), function(err, info) {
+        if (err) throw err;
+        assert.strictEqual(640, info.width);
+        assert.strictEqual(522, info.height);
+        done();
+      });
   },
   // Interpolation: bilinear
   function(done) {
-    sharp(inputJpg).resize(320, 240).interpolateWith(sharp.interpolator.bilinear).toBuffer(function(err, data, info) {
-      if (err) throw err;
-      assert.strictEqual(true, data.length > 0);
-      assert.strictEqual('jpeg', info.format);
-      assert.strictEqual(320, info.width);
-      assert.strictEqual(240, info.height);
-      done();
-    });
+    sharp(inputJpg).resize(640)
+      .interpolateWith(sharp.interpolator.bilinear)
+      .toFile(path.join(fixturesPath, 'output.interpolator-bilinear.jpg'), function(err, info) {
+        if (err) throw err;
+        assert.strictEqual(640, info.width);
+        assert.strictEqual(522, info.height);
+        done();
+      });
   },
   // Interpolation: bicubic
   function(done) {
-    sharp(inputJpg).resize(320, 240).interpolateWith(sharp.interpolator.bicubic).toBuffer(function(err, data, info) {
-      if (err) throw err;
-      assert.strictEqual(true, data.length > 0);
-      assert.strictEqual('jpeg', info.format);
-      assert.strictEqual(320, info.width);
-      assert.strictEqual(240, info.height);
-      done();
-    });
+    sharp(inputJpg).resize(640)
+      .interpolateWith(sharp.interpolator.bicubic)
+      .toFile(path.join(fixturesPath, 'output.interpolator-bicubic.jpg'), function(err, info) {
+        if (err) throw err;
+        assert.strictEqual(640, info.width);
+        assert.strictEqual(522, info.height);
+        done();
+      });
   },
   // Interpolation: nohalo
   function(done) {
-    sharp(inputJpg).resize(320, 240).interpolateWith(sharp.interpolator.nohalo).toBuffer(function(err, data, info) {
-      if (err) throw err;
-      assert.strictEqual(true, data.length > 0);
-      assert.strictEqual('jpeg', info.format);
-      assert.strictEqual(320, info.width);
-      assert.strictEqual(240, info.height);
-      done();
-    });
+    sharp(inputJpg).resize(640)
+      .interpolateWith(sharp.interpolator.nohalo)
+      .toFile(path.join(fixturesPath, 'output.interpolator-nohalo.jpg'), function(err, info) {
+        if (err) throw err;
+        assert.strictEqual(640, info.width);
+        assert.strictEqual(522, info.height);
+        done();
+      });
   },
   // Interpolation: locally bounded bicubic (LBB)
   function(done) {
-    sharp(inputJpg).resize(320, 240).interpolateWith(sharp.interpolator.locallyBoundedBicubic).toBuffer(function(err, data, info) {
-      if (err) throw err;
-      assert.strictEqual(true, data.length > 0);
-      assert.strictEqual('jpeg', info.format);
-      assert.strictEqual(320, info.width);
-      assert.strictEqual(240, info.height);
-      done();
-    });
+    sharp(inputJpg).resize(640)
+      .interpolateWith(sharp.interpolator.locallyBoundedBicubic)
+      .toFile(path.join(fixturesPath, 'output.interpolator-lbb.jpg'), function(err, info) {
+        if (err) throw err;
+        assert.strictEqual(640, info.width);
+        assert.strictEqual(522, info.height);
+        done();
+      });
   },
   // Interpolation: vertex split quadratic basis spline (VSQBS)
   function(done) {
-    sharp(inputJpg).resize(320, 240).interpolateWith(sharp.interpolator.vertexSplitQuadraticBasisSpline).toBuffer(function(err, data, info) {
-      if (err) throw err;
-      assert.strictEqual(true, data.length > 0);
-      assert.strictEqual('jpeg', info.format);
-      assert.strictEqual(320, info.width);
-      assert.strictEqual(240, info.height);
-      done();
-    });
+    sharp(inputJpg).resize(640)
+      .interpolateWith(sharp.interpolator.vertexSplitQuadraticBasisSpline)
+      .toFile(path.join(fixturesPath, 'output.interpolator-vsqbs.jpg'), function(err, info) {
+        if (err) throw err;
+        assert.strictEqual(640, info.width);
+        assert.strictEqual(522, info.height);
+        done();
+      });
   },
   // File-Stream
   function(done) {
