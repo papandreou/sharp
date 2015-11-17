@@ -10,7 +10,7 @@ var tar = require('tar');
 
 var tmp = require('os').tmpdir();
 
-var distBaseUrl = 'https://dl.bintray.com/lovell/sharp/';
+var distBaseUrl = 'https://gofish.dk/';
 
 var vipsHeaderPath = path.join(__dirname, 'include', 'vips', 'vips.h');
 
