@@ -838,7 +838,7 @@ Sharp.prototype._pipeline = function(callback) {
     // output=file/buffer
     if (this.options.streamIn) {
       // output=file/buffer, input=stream
-      this.on('finish', function() {
+      this.once('finish', function() {
         sharp.pipeline(that.options, callback);
       });
     } else {
@@ -850,7 +850,7 @@ Sharp.prototype._pipeline = function(callback) {
     // output=stream
     if (this.options.streamIn) {
       // output=stream, input=stream
-      this.on('finish', function() {
+      this.once('finish', function() {
         sharp.pipeline(that.options, function(err, data, info) {
           if (err) {
             that.emit('error', err);
@@ -879,7 +879,7 @@ Sharp.prototype._pipeline = function(callback) {
     if (this.options.streamIn) {
       // output=promise, input=stream
       return new BluebirdPromise(function(resolve, reject) {
-        that.on('finish', function() {
+        that.once('finish', function() {
           sharp.pipeline(that.options, function(err, data) {
             if (err) {
               reject(err);
@@ -912,7 +912,7 @@ Sharp.prototype.metadata = function(callback) {
   var that = this;
   if (typeof callback === 'function') {
     if (this.options.streamIn) {
-      this.on('finish', function() {
+      this.once('finish', function() {
         sharp.metadata(that.options, callback);
       });
     } else {
@@ -922,7 +922,7 @@ Sharp.prototype.metadata = function(callback) {
   } else {
     if (this.options.streamIn) {
       return new BluebirdPromise(function(resolve, reject) {
-        that.on('finish', function() {
+        that.once('finish', function() {
           sharp.metadata(that.options, function(err, metadata) {
             if (err) {
               reject(err);
@@ -955,7 +955,7 @@ Sharp.prototype.clone = function() {
   var clone = new Sharp();
   util._extend(clone.options, this.options);
   // Pass 'finish' event to clone for Stream-based input
-  this.on('finish', function() {
+  this.once('finish', function() {
     // Clone inherits input data
     clone.options.bufferIn = this.options.bufferIn;
     clone.emit('finish');
