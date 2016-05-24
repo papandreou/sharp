@@ -102,6 +102,10 @@ class PipelineWorker : public AsyncWorker {
     ImageType inputImageType = ImageType::UNKNOWN;
     VImage image;
     if (baton->bufferInLength > 0) {
+      printf("vips_tracked_get_mem %zu\n", vips_tracked_get_mem());
+      printf("vips_tracked_get_mem_highwater %zu\n", vips_tracked_get_mem_highwater());
+      printf("vips_tracked_get_allocs %zu\n", vips_tracked_get_allocs());
+      printf("vips_tracked_get_files %d\n", vips_tracked_get_files());
       // From buffer
       if (baton->rawWidth > 0 && baton->rawHeight > 0 && baton->rawChannels > 0) {
         // Raw, uncompressed pixel data
